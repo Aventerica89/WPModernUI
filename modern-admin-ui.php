@@ -117,6 +117,10 @@ class Modern_Admin_UI_Plugin {
             'enable_list_tables' => array(
                 'title' => 'List Tables (Posts, Pages, etc.)',
                 'description' => 'Modernize all list tables including Posts, Pages, Categories, Tags, Users, and more'
+            ),
+            'enable_profile_page' => array(
+                'title' => 'Users → Profile',
+                'description' => 'Transform the user profile page with organized tabs for personal options, contact info, and account settings'
             )
         );
     }
@@ -1240,6 +1244,12 @@ class Modern_Admin_UI_Plugin {
         if (isset($options['enable_list_tables']) && $options['enable_list_tables']) {
             require_once MODERN_ADMIN_UI_PATH . 'includes/class-list-tables.php';
             new Modern_List_Tables();
+        }
+
+        // Load Profile Page modernizer if enabled
+        if (isset($options['enable_profile_page']) && $options['enable_profile_page']) {
+            require_once MODERN_ADMIN_UI_PATH . 'includes/class-profile-settings.php';
+            new Modern_Profile_Settings();
         }
     }
 }
