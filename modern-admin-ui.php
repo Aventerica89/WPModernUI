@@ -113,6 +113,10 @@ class Modern_Admin_UI_Plugin {
             'enable_permalink_settings' => array(
                 'title' => 'Settings → Permalinks',
                 'description' => 'Transform the Permalinks Settings page with SEO-friendly options'
+            ),
+            'enable_list_tables' => array(
+                'title' => 'List Tables (Posts, Pages, etc.)',
+                'description' => 'Modernize all list tables including Posts, Pages, Categories, Tags, Users, and more'
             )
         );
     }
@@ -1230,6 +1234,12 @@ class Modern_Admin_UI_Plugin {
         if (isset($options['enable_permalink_settings']) && $options['enable_permalink_settings']) {
             require_once MODERN_ADMIN_UI_PATH . 'includes/class-permalinks-settings.php';
             new Modern_Permalinks_Settings();
+        }
+
+        // Load List Tables modernizer if enabled
+        if (isset($options['enable_list_tables']) && $options['enable_list_tables']) {
+            require_once MODERN_ADMIN_UI_PATH . 'includes/class-list-tables.php';
+            new Modern_List_Tables();
         }
     }
 }
