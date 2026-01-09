@@ -3,7 +3,7 @@
  * Plugin Name: Modern Admin UI
  * Plugin URI: https://smithnew.jbmdcreations.dev
  * Description: Modernizes WordPress admin pages with clean, tabbed interfaces. Control which pages get the modern treatment.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: JBMD Creations
  * Author URI: https://jbmdcreations.dev
  * License: GPL v2 or later
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('MODERN_ADMIN_UI_VERSION', '1.0.0');
+define('MODERN_ADMIN_UI_VERSION', '1.1.0');
 define('MODERN_ADMIN_UI_PATH', plugin_dir_path(__FILE__));
 define('MODERN_ADMIN_UI_URL', plugin_dir_url(__FILE__));
 
@@ -103,31 +103,27 @@ class Modern_Admin_UI_Plugin {
             )
         );
         
-        // Placeholder fields for future pages
-        $future_pages = array(
+        // Additional settings pages
+        $additional_pages = array(
             'enable_reading_settings' => array(
                 'title' => 'Settings → Reading',
-                'description' => 'Modernize the Reading Settings page (Coming Soon)',
-                'disabled' => true
+                'description' => 'Transform the Reading Settings page with a modern, tabbed interface'
             ),
             'enable_discussion_settings' => array(
                 'title' => 'Settings → Discussion',
-                'description' => 'Modernize the Discussion Settings page (Coming Soon)',
-                'disabled' => true
+                'description' => 'Transform the Discussion Settings page with organized sections'
             ),
             'enable_media_settings' => array(
                 'title' => 'Settings → Media',
-                'description' => 'Modernize the Media Settings page (Coming Soon)',
-                'disabled' => true
+                'description' => 'Transform the Media Settings page with visual size cards'
             ),
             'enable_permalink_settings' => array(
                 'title' => 'Settings → Permalinks',
-                'description' => 'Modernize the Permalinks Settings page (Coming Soon)',
-                'disabled' => true
+                'description' => 'Transform the Permalinks Settings page with SEO-friendly options'
             )
         );
         
-        foreach ($future_pages as $key => $page) {
+        foreach ($additional_pages as $key => $page) {
             add_settings_field(
                 $key,
                 $page['title'],
@@ -138,7 +134,7 @@ class Modern_Admin_UI_Plugin {
                     'label_for' => $key,
                     'field_key' => $key,
                     'description' => $page['description'],
-                    'disabled' => isset($page['disabled']) ? $page['disabled'] : false
+                    'disabled' => false
                 )
             );
         }
@@ -505,20 +501,36 @@ class Modern_Admin_UI_Plugin {
      */
     public function load_page_modernizers() {
         $options = get_option('modern_admin_ui_settings', array());
-        
+
         // Load General Settings modernizer if enabled
         if (isset($options['enable_general_settings']) && $options['enable_general_settings']) {
             require_once MODERN_ADMIN_UI_PATH . 'includes/class-general-settings.php';
             new Modern_General_Settings();
         }
-        
-        // Future: Load other page modernizers here as they're developed
-        /*
+
+        // Load Reading Settings modernizer if enabled
         if (isset($options['enable_reading_settings']) && $options['enable_reading_settings']) {
             require_once MODERN_ADMIN_UI_PATH . 'includes/class-reading-settings.php';
             new Modern_Reading_Settings();
         }
-        */
+
+        // Load Discussion Settings modernizer if enabled
+        if (isset($options['enable_discussion_settings']) && $options['enable_discussion_settings']) {
+            require_once MODERN_ADMIN_UI_PATH . 'includes/class-discussion-settings.php';
+            new Modern_Discussion_Settings();
+        }
+
+        // Load Media Settings modernizer if enabled
+        if (isset($options['enable_media_settings']) && $options['enable_media_settings']) {
+            require_once MODERN_ADMIN_UI_PATH . 'includes/class-media-settings.php';
+            new Modern_Media_Settings();
+        }
+
+        // Load Permalinks Settings modernizer if enabled
+        if (isset($options['enable_permalink_settings']) && $options['enable_permalink_settings']) {
+            require_once MODERN_ADMIN_UI_PATH . 'includes/class-permalinks-settings.php';
+            new Modern_Permalinks_Settings();
+        }
     }
 }
 
