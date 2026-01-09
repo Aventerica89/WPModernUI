@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Admin UI - Table Mockup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f0f1;
+            color: #1d2327;
+            padding: 40px;
+        }
+
+        .mockup-label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .mockup-label h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .mockup-label p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .admin-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        /* Page Header */
+        .page-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d2327;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #2271b1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #135e96;
+        }
+
+        .btn-secondary {
+            background: #f0f0f1;
+            color: #1d2327;
+            border: 1px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            padding: 20px 32px;
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .filter-tabs {
+            display: flex;
+            background: #e8e8e8;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #646970;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+        }
+
+        .filter-tab.active {
+            background: white;
+            color: #1d2327;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .filter-tab .count {
+            background: #ddd;
+            color: #646970;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+        }
+
+        .filter-tab.active .count {
+            background: #2271b1;
+            color: white;
+        }
+
+        /* Dropdown Selects */
+        .modern-select {
+            appearance: none;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 36px 10px 14px;
+            font-size: 13px;
+            color: #1d2327;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23646970' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            min-width: 140px;
+        }
+
+        .modern-select:hover {
+            border-color: #2271b1;
+        }
+
+        .modern-select:focus {
+            outline: none;
+            border-color: #2271b1;
+            box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.15);
+        }
+
+        /* Search Box */
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 0 12px;
+            transition: all 0.2s;
+            margin-left: auto;
+        }
+
+        .search-box:focus-within {
+            border-color: #2271b1;
+            box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.15);
+        }
+
+        .search-box svg {
+            color: #646970;
+            width: 16px;
+            height: 16px;
+        }
+
+        .search-box input {
+            border: none;
+            padding: 10px 12px;
+            font-size: 13px;
+            outline: none;
+            width: 200px;
+        }
+
+        .search-btn {
+            background: #2271b1;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Bulk Actions Bar */
+        .bulk-bar {
+            padding: 12px 32px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bulk-select {
+            appearance: none;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 8px 32px 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23646970' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        .bulk-apply {
+            background: #f0f0f1;
+            border: 1px solid #e0e0e0;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .bulk-apply:hover {
+            background: #e0e0e0;
+        }
+
+        .items-count {
+            margin-left: auto;
+            color: #646970;
+            font-size: 13px;
+        }
+
+        /* Table Styles */
+        .modern-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .modern-table th {
+            background: #f8f9fa;
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #646970;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .modern-table th:first-child {
+            padding-left: 32px;
+            width: 40px;
+        }
+
+        .modern-table td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f1;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        .modern-table td:first-child {
+            padding-left: 32px;
+        }
+
+        .modern-table tr:hover {
+            background: #f8fbfd;
+        }
+
+        .modern-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Checkbox */
+        .modern-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #c3c4c7;
+            border-radius: 4px;
+            cursor: pointer;
+            appearance: none;
+            transition: all 0.2s;
+        }
+
+        .modern-checkbox:checked {
+            background: #2271b1;
+            border-color: #2271b1;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M10 3L4.5 8.5 2 6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .modern-checkbox:hover {
+            border-color: #2271b1;
+        }
+
+        /* Post Title Cell */
+        .post-title-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .post-thumbnail {
+            width: 48px;
+            height: 48px;
+            background: #f0f0f1;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #646970;
+            font-size: 11px;
+        }
+
+        .post-info {
+            flex: 1;
+        }
+
+        .post-title {
+            font-weight: 600;
+            color: #2271b1;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+
+        .post-title:hover {
+            color: #135e96;
+            text-decoration: underline;
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: #646970;
+        }
+
+        /* Row Actions */
+        .row-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            margin-top: 6px;
+        }
+
+        tr:hover .row-actions {
+            opacity: 1;
+        }
+
+        .row-action {
+            font-size: 12px;
+            color: #2271b1;
+            cursor: pointer;
+            padding: 2px 0;
+        }
+
+        .row-action:hover {
+            color: #135e96;
+        }
+
+        .row-action.trash {
+            color: #d63638;
+        }
+
+        .row-action-sep {
+            color: #c3c4c7;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-badge.draft {
+            background: #f0f0f1;
+            color: #646970;
+        }
+
+        .status-badge.published {
+            background: #d7f1e6;
+            color: #00a32a;
+        }
+
+        .status-badge.pending {
+            background: #fff3cd;
+            color: #996800;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .status-badge.draft .status-dot {
+            background: #646970;
+        }
+
+        .status-badge.published .status-dot {
+            background: #00a32a;
+        }
+
+        .status-badge.pending .status-dot {
+            background: #996800;
+        }
+
+        /* Category/Tag Pills */
+        .tag-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag-pill {
+            background: #f0f6fc;
+            color: #2271b1;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tag-pill:hover {
+            background: #2271b1;
+            color: white;
+        }
+
+        /* Date Cell */
+        .date-cell {
+            color: #646970;
+            font-size: 13px;
+        }
+
+        .date-cell .date-main {
+            color: #1d2327;
+            font-weight: 500;
+        }
+
+        /* Pagination */
+        .table-footer {
+            padding: 16px 32px;
+            background: #fafafa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .page-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: white;
+            color: #1d2327;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .page-btn:hover {
+            background: #f0f0f1;
+            border-color: #c3c4c7;
+        }
+
+        .page-btn.active {
+            background: #2271b1;
+            border-color: #2271b1;
+            color: white;
+        }
+
+        .page-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-input {
+            width: 50px;
+            text-align: center;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin: 0 8px;
+        }
+
+        .page-total {
+            color: #646970;
+            font-size: 13px;
+            margin-left: 8px;
+        }
+
+        .per-page {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #646970;
+            font-size: 13px;
+        }
+
+        .per-page select {
+            padding: 8px 28px 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            appearance: none;
+            background: white;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23646970' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            cursor: pointer;
+        }
+
+        /* Comparison Section */
+        .comparison-section {
+            margin-top: 40px;
+            padding: 24px;
+            background: #fff3cd;
+            border-radius: 12px;
+            border-left: 4px solid #996800;
+        }
+
+        .comparison-section h3 {
+            color: #996800;
+            margin-bottom: 8px;
+        }
+
+        .comparison-section p {
+            color: #664d00;
+            font-size: 14px;
+        }
+
+        /* Feature List */
+        .feature-list {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .feature-card h4 {
+            color: #2271b1;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .feature-card p {
+            color: #646970;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* ID Column */
+        .id-cell {
+            color: #646970;
+            font-size: 13px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="mockup-label">
+        <h1>Modern Admin UI - Table Design Mockup</h1>
+        <p>Preview of the modernized WordPress admin table interface</p>
+    </div>
+
+    <div class="admin-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Posts</h1>
+            <div class="header-actions">
+                <button class="btn btn-secondary">Import</button>
+                <button class="btn btn-primary">+ Add New Post</button>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-tabs">
+                <button class="filter-tab active">All <span class="count">6</span></button>
+                <button class="filter-tab">Published <span class="count">2</span></button>
+                <button class="filter-tab">Drafts <span class="count">4</span></button>
+                <button class="filter-tab">Trash <span class="count">0</span></button>
+            </div>
+
+            <div class="filter-group">
+                <select class="modern-select">
+                    <option>All Dates</option>
+                    <option>January 2026</option>
+                    <option>December 2025</option>
+                </select>
+
+                <select class="modern-select">
+                    <option>All Categories</option>
+                    <option>General</option>
+                    <option>Test Category #1</option>
+                    <option>Test Category #2</option>
+                </select>
+
+                <select class="modern-select">
+                    <option>All Tags</option>
+                    <option>Test Tag #1</option>
+                    <option>Test Tag #2</option>
+                </select>
+
+                <button class="btn btn-secondary" style="padding: 10px 16px;">Filter</button>
+            </div>
+
+            <div class="search-box">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" placeholder="Search posts...">
+                <button class="search-btn">Search</button>
+            </div>
+        </div>
+
+        <!-- Bulk Actions Bar -->
+        <div class="bulk-bar">
+            <select class="bulk-select">
+                <option>Bulk Actions</option>
+                <option>Edit</option>
+                <option>Move to Trash</option>
+            </select>
+            <button class="bulk-apply">Apply</button>
+            <span class="items-count">6 items</span>
+        </div>
+
+        <!-- Table -->
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" class="modern-checkbox"></th>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Categories</th>
+                    <th>Tags</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" class="modern-checkbox"></td>
+                    <td class="id-cell">2869</td>
+                    <td>
+                        <div class="post-title-cell">
+                            <div class="post-thumbnail">IMG</div>
+                            <div class="post-info">
+                                <div class="post-title">Test Post #6</div>
+                                <div class="row-actions">
+                                    <span class="row-action">Edit</span>
+                                    <span class="row-action-sep">|</span>
+                                    <span class="row-action">Quick Edit</span>
+                                    <span class="row-action-sep">|</span>
+                                    <span class="row-action trash">Trash</span>
+                                    <span class="row-action-sep">|</span>
+                                    <span class="row-action">View</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>Admin</td>
+                    <td>
+                        <div class="tag-pills">
+                            <span class="tag-pill">General</span>
+                            <span class="tag-pill">Test Category #4</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="tag-pills">
+                            <span class="tag-pill">Test Tag #1</span>
+                            <span class="tag-pill">Test Tag #3</span>
+                        </div>
+                    </td>
+                    <td><span class="status-badge draft"><span class="status-dot"></span>Draft</span></td>
+                    <td class="date-cell">
+                        <div class="date-main">Jan 9, 2026</div>
+                        <div>2:34 PM</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="modern-checkbox"></td>
+                    <td class="id-cell">2868</td>
+                    <td>
+                        <div class="post-title-cell">
+                            <div class="post-thumbnail">IMG</div>
+                            <div class="post-info">
+                                <div class="post-title">Test Post #5</div>
+                                <div class="row-actions">
+                                    <span class="row-action">Edit</span>
+                                    <span class="row-action-sep">|</span>
+                                    <span class="row-action">Quick Edit</span>
+                                    <span class="row-action-sep">|</span>
+                                    <span class="row-action trash">Trash</span>
+                                    <span class="row-action-sep">|</span>
+                                    <span class="row-action">View</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>Admin</td>
+                    <td>
+                        <div class="tag-pills">
+                            <span class="tag-pill">Test Category #6</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="tag-pills">
+                            <span class="tag-pill">Test Tag #2</span>
+                            <span class="tag-pill">Test Tag #6</span>
+                        </div>
+                    </td>
+                    <td><span class="status-badge published"><span class="status-dot"></span>Published</span></td>
+                    <td class="date-cell">
+                        <div class="date-main">Jan 8, 2026</div>
+                        <div>10:15 AM</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="modern-checkbox"></td>
+                    <td class="id-cell">2867</td>
+                    <td>
+                        <div class="post-title-cell">
+                            <div class="post-thumbnail">IMG</div>
+                            <div class="post-info">
+                                <div class="post-title">Test Post #4</div>
+                                <div class="row-actions">
+                                    <span class="row-action">Edit</span>
+                                    <span class="row-action-sep">|</span>
+                                    <span class="row-action">Quick Edit</span>
+                                    <span class="row-action-sep">|</span>
+                                    <span class="row-action trash">Trash</span>
+                                    <span class="row-action-sep">|</span>
+                                    <span class="row-action">View</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>Admin</td>
+                    <td>
+                        <div class="tag-pills">
+                            <span class="tag-pill">General</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="color: #646970;">—</span>
+                    </td>
+                    <td><span class="status-badge draft"><span class="status-dot"></span>Draft</span></td>
+                    <td class="date-cell">
+                        <div class="date-main">Jan 7, 2026</div>
+                        <div>4:22 PM</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="modern-checkbox"></td>
+                    <td class="id-cell">2866</td>
+                    <td>
+                        <div class="post-title-cell">
+                            <div class="post-thumbnail">IMG</div>
+                            <div class="post-info">
+                                <div class="post-title">Test Post #3</div>
+                                <div class="row-actions">
+                                    <span class="row-action">Edit</span>
+                                    <span class="row-action-sep">|</span>
+                                    <span class="row-action">Quick Edit</span>
+                                    <span class="row-action-sep">|</span>
+                                    <span class="row-action trash">Trash</span>
+                                    <span class="row-action-sep">|</span>
+                                    <span class="row-action">View</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>Admin</td>
+                    <td>
+                        <div class="tag-pills">
+                            <span class="tag-pill">Test Category #2</span>
+                            <span class="tag-pill">Test Category #4</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="tag-pills">
+                            <span class="tag-pill">Test Tag #2</span>
+                            <span class="tag-pill">Test Tag #6</span>
+                        </div>
+                    </td>
+                    <td><span class="status-badge pending"><span class="status-dot"></span>Pending</span></td>
+                    <td class="date-cell">
+                        <div class="date-main">Jan 6, 2026</div>
+                        <div>11:45 AM</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Table Footer / Pagination -->
+        <div class="table-footer">
+            <div class="per-page">
+                <span>Show</span>
+                <select>
+                    <option>20</option>
+                    <option>50</option>
+                    <option>100</option>
+                </select>
+                <span>per page</span>
+            </div>
+
+            <div class="pagination">
+                <button class="page-btn disabled">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <span style="padding: 0 8px; color: #646970;">...</span>
+                <button class="page-btn">10</button>
+                <button class="page-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+                <span class="page-total">of 10 pages</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature Highlights -->
+    <div class="feature-list">
+        <div class="feature-card">
+            <h4>Modern Filter Tabs</h4>
+            <p>Clean segmented control design replaces text links. Active state clearly visible with smooth transitions.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Styled Dropdowns</h4>
+            <p>Custom select styling with hover and focus states. Consistent border radius and spacing throughout.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Enhanced Checkboxes</h4>
+            <p>Larger, more accessible checkboxes with smooth checked animation and hover states.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Status Badges</h4>
+            <p>Color-coded status indicators with dot icons. Clear visual distinction between Draft, Published, and Pending.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Tag Pills</h4>
+            <p>Categories and tags displayed as interactive pills. Hover to highlight, click to filter.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Modern Pagination</h4>
+            <p>Clean pagination controls with per-page selector. Clear active state and disabled styling.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Row Hover Actions</h4>
+            <p>Action links appear on row hover for cleaner default view. Trash action highlighted in red.</p>
+        </div>
+        <div class="feature-card">
+            <h4>Integrated Search</h4>
+            <p>Search box with icon, input field, and button in a unified design. Focus state with subtle shadow.</p>
+        </div>
+    </div>
+
+    <div class="comparison-section">
+        <h3>Note: This is a UI/UX Mockup</h3>
+        <p>This HTML file shows the proposed design for modernizing WordPress admin tables. The actual implementation will apply these styles to Posts, Pages, Categories, Tags, Users, and other list tables throughout the WordPress admin. A toggle option will be added to the plugin settings to enable/disable this feature.</p>
+    </div>
+</body>
+</html>
