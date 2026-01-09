@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Admin UI - Admin Menu & Toolbar Mockup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/dashicons/0.9.0/css/dashicons.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f0f0f1;
+            min-height: 100vh;
+        }
+
+        /* =====================================================
+           MOCKUP LABEL
+           ===================================================== */
+        .mockup-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+        }
+
+        /* =====================================================
+           ADMIN TOOLBAR (Top Bar)
+           ===================================================== */
+        .admin-toolbar {
+            position: fixed;
+            top: 40px; /* Below mockup banner */
+            left: 0;
+            right: 0;
+            height: 32px;
+            background: linear-gradient(90deg, #1e1e2f 0%, #252538 100%);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            z-index: 9999;
+        }
+
+        .toolbar-left,
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .toolbar-right {
+            margin-left: auto;
+        }
+
+        .toolbar-item {
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            height: 32px;
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+            margin: 0 2px;
+            position: relative;
+        }
+
+        .toolbar-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .toolbar-item .dashicons {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            margin-right: 4px;
+            opacity: 0.8;
+        }
+
+        .toolbar-item:hover .dashicons {
+            opacity: 1;
+        }
+
+        .toolbar-item.wp-logo .dashicons {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+            margin-right: 0;
+        }
+
+        /* Notification Badge */
+        .toolbar-badge {
+            background: #e74c3c;
+            color: white;
+            font-size: 9px;
+            font-weight: 600;
+            padding: 1px 5px;
+            border-radius: 8px;
+            margin-left: 4px;
+        }
+
+        .toolbar-badge.updates {
+            background: #f39c12;
+        }
+
+        /* Toolbar Dropdown */
+        .toolbar-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 6px;
+            background: #252536;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            min-width: 180px;
+            padding: 6px 0;
+            display: none;
+            z-index: 10001;
+        }
+
+        .toolbar-item:hover .toolbar-dropdown {
+            display: block;
+        }
+
+        .toolbar-dropdown a {
+            display: block;
+            padding: 8px 14px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.15s ease;
+        }
+
+        .toolbar-dropdown a:hover {
+            background: rgba(255,255,255,0.08);
+            color: white;
+        }
+
+        /* User Avatar */
+        .user-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2);
+            margin-right: 6px;
+            background: #667eea;
+        }
+
+        /* =====================================================
+           ADMIN SIDEBAR MENU
+           ===================================================== */
+        .admin-sidebar {
+            position: fixed;
+            top: 72px; /* Below toolbar + mockup banner */
+            left: 0;
+            bottom: 0;
+            width: 160px;
+            background: linear-gradient(180deg, #1e1e2f 0%, #191927 100%);
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+
+        .menu-item {
+            margin: 1px 6px;
+        }
+
+        .menu-item > a {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+
+        .menu-item > a:hover {
+            background: rgba(255,255,255,0.08);
+            color: white;
+        }
+
+        .menu-item.active > a {
+            background: linear-gradient(135deg, rgba(34, 113, 177, 0.9) 0%, rgba(19, 94, 150, 0.9) 100%);
+            color: white;
+        }
+
+        .menu-item .dashicons {
+            font-size: 18px;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-item:hover .dashicons,
+        .menu-item.active .dashicons {
+            opacity: 1;
+        }
+
+        .menu-item .menu-text {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Menu Badge */
+        .menu-badge {
+            background: #e74c3c;
+            color: white;
+            font-size: 9px;
+            font-weight: 600;
+            padding: 0 5px;
+            min-width: 18px;
+            height: 16px;
+            line-height: 16px;
+            border-radius: 8px;
+            text-align: center;
+            margin-left: auto;
+        }
+
+        .menu-badge.updates {
+            background: #f39c12;
+        }
+
+        /* Menu Separator */
+        .menu-separator {
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+            margin: 6px 10px;
+        }
+
+        /* Submenu */
+        .submenu {
+            background: rgba(0,0,0,0.2);
+            margin: 2px 6px 0 6px;
+            border-radius: 4px;
+            padding: 4px 0;
+        }
+
+        .submenu a {
+            display: block;
+            padding: 4px 8px 4px 28px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.15s ease;
+        }
+
+        .submenu a:hover {
+            color: white;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .submenu a.active {
+            color: #72aee6;
+        }
+
+        /* Collapse Button */
+        .collapse-menu {
+            margin: 8px 6px;
+            padding: 6px 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .collapse-menu:hover {
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.8);
+        }
+
+        .collapse-menu .dashicons {
+            margin-right: 6px;
+            font-size: 16px;
+        }
+
+        /* =====================================================
+           MAIN CONTENT AREA
+           ===================================================== */
+        .main-content {
+            margin-left: 160px;
+            margin-top: 72px;
+            padding: 20px;
+            min-height: calc(100vh - 72px);
+        }
+
+        .content-header {
+            background: white;
+            padding: 20px 24px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .content-header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1d2327;
+            margin-bottom: 8px;
+        }
+
+        .content-header p {
+            color: #646970;
+            font-size: 14px;
+        }
+
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .feature-card h3 {
+            color: #2271b1;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            color: #646970;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .feature-card code {
+            background: #f0f0f1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        /* Notes */
+        .notes-section {
+            margin-top: 30px;
+            background: #fff8e5;
+            border-left: 4px solid #f39c12;
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .notes-section h3 {
+            color: #996800;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .notes-section p {
+            color: #664d00;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .notes-section ul {
+            margin: 8px 0 0 20px;
+            color: #664d00;
+            font-size: 13px;
+        }
+
+        .notes-section li {
+            margin: 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mockup Banner -->
+    <div class="mockup-banner">
+        Modern Admin UI - Admin Menu & Toolbar Mockup Preview
+    </div>
+
+    <!-- Admin Toolbar -->
+    <div class="admin-toolbar">
+        <div class="toolbar-left">
+            <a href="#" class="toolbar-item wp-logo">
+                <span class="dashicons dashicons-wordpress"></span>
+                <div class="toolbar-dropdown">
+                    <a href="#">About WordPress</a>
+                    <a href="#">WordPress.org</a>
+                    <a href="#">Documentation</a>
+                    <a href="#">Support</a>
+                    <a href="#">Feedback</a>
+                </div>
+            </a>
+            <a href="#" class="toolbar-item">
+                <span class="dashicons dashicons-admin-home"></span>
+                Smith Dev
+                <div class="toolbar-dropdown">
+                    <a href="#">Visit Site</a>
+                    <a href="#">Dashboard</a>
+                    <a href="#">Themes</a>
+                    <a href="#">Widgets</a>
+                    <a href="#">Menus</a>
+                </div>
+            </a>
+            <a href="#" class="toolbar-item">
+                <span class="dashicons dashicons-update"></span>
+                <span class="toolbar-badge updates">7</span>
+                <div class="toolbar-dropdown">
+                    <a href="#">WordPress 6.4.2</a>
+                    <a href="#">5 Plugin Updates</a>
+                    <a href="#">2 Theme Updates</a>
+                </div>
+            </a>
+            <a href="#" class="toolbar-item">
+                <span class="dashicons dashicons-admin-comments"></span>
+                <span class="toolbar-badge">3</span>
+            </a>
+            <a href="#" class="toolbar-item">
+                <span class="dashicons dashicons-plus"></span>
+                New
+                <div class="toolbar-dropdown">
+                    <a href="#">Post</a>
+                    <a href="#">Media</a>
+                    <a href="#">Page</a>
+                    <a href="#">User</a>
+                </div>
+            </a>
+        </div>
+        <div class="toolbar-right">
+            <a href="#" class="toolbar-item">
+                <span class="dashicons dashicons-search"></span>
+            </a>
+            <a href="#" class="toolbar-item">
+                <div class="user-avatar"></div>
+                Howdy, Admin
+                <div class="toolbar-dropdown">
+                    <a href="#">Edit Profile</a>
+                    <a href="#">Log Out</a>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Admin Sidebar -->
+    <div class="admin-sidebar">
+        <div class="menu-item active">
+            <a href="#">
+                <span class="dashicons dashicons-dashboard"></span>
+                <span class="menu-text">Dashboard</span>
+            </a>
+            <div class="submenu">
+                <a href="#" class="active">Home</a>
+                <a href="#">Updates</a>
+            </div>
+        </div>
+
+        <div class="menu-separator"></div>
+
+        <div class="menu-item">
+            <a href="#">
+                <span class="dashicons dashicons-admin-post"></span>
+                <span class="menu-text">Posts</span>
+            </a>
+        </div>
+
+        <div class="menu-item">
+            <a href="#">
+                <span class="dashicons dashicons-admin-media"></span>
+                <span class="menu-text">Media</span>
+            </a>
+        </div>
+
+        <div class="menu-item">
+            <a href="#">
+                <span class="dashicons dashicons-admin-page"></span>
+                <span class="menu-text">Pages</span>
+            </a>
+        </div>
+
+        <div class="menu-item">
+            <a href="#">
+                <span class="dashicons dashicons-calendar-alt"></span>
+                <span class="menu-text">Events</span>
+            </a>
+        </div>
+
+        <div class="menu-item">
+            <a href="#">
+                <span class="dashicons dashicons-feedback"></span>
+                <span class="menu-text">WS Form</span>
+                <span class="menu-badge">41</span>
+            </a>
+        </div>
+
+        <div class="menu-separator"></div>
+
+        <div class="menu-item">
+            <a href="#">
+                <span class="dashicons dashicons-admin-appearance"></span>
+                <span class="menu-text">Appearance</span>
+            </a>
+        </div>
+
+        <div class="menu-item">
+            <a href="#">
+                <span class="dashicons dashicons-admin-plugins"></span>
+                <span class="menu-text">Plugins</span>
+                <span class="menu-badge updates">5</span>
+            </a>
+        </div>
+
+        <div class="menu-item">
+            <a href="#">
+                <span class="dashicons dashicons-admin-users"></span>
+                <span class="menu-text">Users</span>
+            </a>
+        </div>
+
+        <div class="menu-item">
+            <a href="#">
+                <span class="dashicons dashicons-admin-tools"></span>
+                <span class="menu-text">Tools</span>
+            </a>
+        </div>
+
+        <div class="menu-item">
+            <a href="#">
+                <span class="dashicons dashicons-admin-settings"></span>
+                <span class="menu-text">Settings</span>
+            </a>
+        </div>
+
+        <div class="menu-separator"></div>
+
+        <div class="menu-item">
+            <a href="#">
+                <span class="dashicons dashicons-star-filled"></span>
+                <span class="menu-text">Modern Admin UI</span>
+            </a>
+        </div>
+
+        <div class="collapse-menu">
+            <span class="dashicons dashicons-arrow-left-alt2"></span>
+            Collapse menu
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="content-header">
+            <h1>Admin Menu & Toolbar Mockup</h1>
+            <p>This preview shows the modernized sidebar menu and top toolbar design</p>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>Sidebar Menu Styling</h3>
+                <p>Dark gradient background with subtle rounded corners on menu items. Small padding values (<code>6px 8px</code>) preserve compact layout while improving visual appeal.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Active State</h3>
+                <p>Active menu items have a blue gradient background matching the plugin branding. Icons brighten to full opacity on hover and active states.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Notification Badges</h3>
+                <p>Red badges for notifications, orange badges for updates. Compact pill design that doesn't disrupt the menu layout.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Toolbar Dropdowns</h3>
+                <p>Rounded dropdown menus (<code>border-radius: 8px</code>) with shadow and spacing. Smooth hover transitions on all items.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Submenu Styling</h3>
+                <p>Submenus have a darker background with rounded corners. Proper indentation and subtle active state highlighting.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Text Handling</h3>
+                <p>Menu text uses <code>text-overflow: ellipsis</code> for long plugin names. No word-breaking or wrapping issues.</p>
+            </div>
+        </div>
+
+        <div class="notes-section">
+            <h3>Key Fixes from Previous Version</h3>
+            <ul>
+                <li>Removed problematic flex display on menu icons</li>
+                <li>Restored rounded dropdowns on toolbar (user requested)</li>
+                <li>Using smaller padding values (6px 8px instead of 10px 12px)</li>
+                <li>Preserved WordPress default menu width</li>
+                <li>Added text-overflow handling for long menu names</li>
+                <li>No modifications to content area margins</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

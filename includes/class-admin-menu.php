@@ -36,14 +36,7 @@ class Modern_Admin_Menu {
         ?>
         <script type="text/javascript">
         jQuery(document).ready(function($) {
-            // Add modern class to body
             $('body').addClass('modern-admin-menu');
-
-            // Add active indicator animation
-            var $currentItem = $('#adminmenu li.current');
-            if ($currentItem.length) {
-                $currentItem.addClass('modern-active');
-            }
         });
         </script>
         <?php
@@ -65,22 +58,21 @@ class Modern_Admin_Menu {
         }
 
         .modern-admin-menu #adminmenu {
-            margin: 8px 0;
+            margin: 6px 0;
         }
 
         /* Menu Separator */
         .modern-admin-menu #adminmenu li.wp-menu-separator {
             background: rgba(255,255,255,0.08);
-            margin: 6px 10px;
+            margin: 6px 8px;
         }
 
-        /* Top Level Menu Items */
+        /* Top Level Menu Items - Small padding */
         .modern-admin-menu #adminmenu li.menu-top > a {
-            margin: 2px 6px;
-            padding: 8px 10px;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-            white-space: nowrap;
+            margin: 1px 6px;
+            padding: 6px 8px;
+            border-radius: 4px;
+            transition: background 0.15s ease, color 0.15s ease;
         }
 
         .modern-admin-menu #adminmenu li.menu-top > a:hover {
@@ -99,10 +91,10 @@ class Modern_Admin_Menu {
             color: white;
         }
 
-        /* Menu Icons - preserve default sizing */
+        /* Menu Icons */
         .modern-admin-menu #adminmenu .wp-menu-image::before {
             color: rgba(255,255,255,0.7);
-            transition: color 0.2s ease;
+            transition: color 0.15s ease;
         }
 
         .modern-admin-menu #adminmenu li.menu-top:hover .wp-menu-image::before,
@@ -115,8 +107,7 @@ class Modern_Admin_Menu {
         .modern-admin-menu #adminmenu .wp-menu-name {
             color: rgba(255,255,255,0.85);
             font-size: 13px;
-            font-weight: 400;
-            transition: color 0.2s ease;
+            transition: color 0.15s ease;
         }
 
         .modern-admin-menu #adminmenu li.menu-top:hover .wp-menu-name,
@@ -133,10 +124,10 @@ class Modern_Admin_Menu {
             font-size: 9px;
             font-weight: 600;
             padding: 0 5px;
-            min-width: 18px;
-            height: 18px;
-            line-height: 18px;
-            border-radius: 9px;
+            min-width: 16px;
+            height: 16px;
+            line-height: 16px;
+            border-radius: 8px;
             text-align: center;
         }
 
@@ -147,22 +138,20 @@ class Modern_Admin_Menu {
         /* Submenu Styling */
         .modern-admin-menu #adminmenu .wp-submenu {
             background: #252536;
-            border-radius: 0;
-            box-shadow: none;
-            padding: 6px 0;
+            padding: 4px 0;
         }
 
         .modern-admin-menu #adminmenu .wp-not-current-submenu .wp-submenu {
             background: #252536;
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.25);
             border-radius: 0 6px 6px 0;
         }
 
         .modern-admin-menu #adminmenu .wp-submenu a {
             color: rgba(255,255,255,0.7) !important;
-            padding: 6px 12px;
+            padding: 5px 12px;
             font-size: 13px;
-            transition: all 0.15s ease;
+            transition: color 0.15s ease, background 0.15s ease;
         }
 
         .modern-admin-menu #adminmenu .wp-submenu a:hover {
@@ -172,39 +161,26 @@ class Modern_Admin_Menu {
 
         .modern-admin-menu #adminmenu .wp-submenu li.current a {
             color: #72aee6 !important;
-            font-weight: 500;
         }
 
-        /* Submenu Header */
-        .modern-admin-menu #adminmenu .wp-submenu .wp-submenu-head {
-            color: rgba(255,255,255,0.5);
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 8px 12px 6px;
-        }
-
-        /* Open Submenu (Flyout) */
+        /* Open Submenu */
         .modern-admin-menu #adminmenu .wp-has-current-submenu .wp-submenu,
         .modern-admin-menu #adminmenu .wp-menu-open .wp-submenu {
-            position: relative;
-            box-shadow: none;
             background: rgba(0,0,0,0.2);
-            margin: 4px 6px 0 6px;
+            margin: 2px 6px 0 6px;
             padding: 4px 0;
-            border-radius: 6px;
+            border-radius: 4px;
         }
 
         .modern-admin-menu #adminmenu .wp-has-current-submenu .wp-submenu a,
         .modern-admin-menu #adminmenu .wp-menu-open .wp-submenu a {
-            padding: 5px 10px 5px 16px;
+            padding: 4px 8px 4px 14px;
         }
 
         /* Collapse Button */
         .modern-admin-menu #collapse-menu {
             margin: 4px 6px;
-            border-radius: 6px;
+            border-radius: 4px;
         }
 
         .modern-admin-menu #collapse-menu:hover {
@@ -215,14 +191,14 @@ class Modern_Admin_Menu {
             color: rgba(255,255,255,0.5);
         }
 
-        /* Admin Menu Arrow - hide it */
+        /* Hide menu arrow */
         .modern-admin-menu #adminmenu .wp-menu-arrow,
         .modern-admin-menu #adminmenu .wp-has-current-submenu .wp-menu-arrow {
             display: none;
         }
 
         /* =====================================================
-           MODERN ADMIN TOOLBAR
+           MODERN ADMIN TOOLBAR - Rounded Dropdowns
            ===================================================== */
 
         /* Toolbar Container */
@@ -234,8 +210,10 @@ class Modern_Admin_Menu {
         /* Toolbar Items */
         .modern-admin-menu #wpadminbar .ab-top-menu > li > a,
         .modern-admin-menu #wpadminbar .ab-top-menu > li > .ab-item {
-            transition: all 0.2s ease;
             color: rgba(255,255,255,0.85) !important;
+            transition: all 0.15s ease;
+            border-radius: 4px;
+            margin: 0 2px;
         }
 
         .modern-admin-menu #wpadminbar .ab-top-menu > li:hover > a,
@@ -249,7 +227,7 @@ class Modern_Admin_Menu {
         .modern-admin-menu #wpadminbar .ab-icon::before,
         .modern-admin-menu #wpadminbar .ab-item::before {
             color: rgba(255,255,255,0.75) !important;
-            transition: color 0.2s ease;
+            transition: color 0.15s ease;
         }
 
         .modern-admin-menu #wpadminbar li:hover .ab-icon::before,
@@ -257,19 +235,23 @@ class Modern_Admin_Menu {
             color: white !important;
         }
 
-        /* Toolbar Submenus */
+        /* Toolbar Dropdowns - ROUNDED with spacing */
         .modern-admin-menu #wpadminbar .ab-sub-wrapper {
             background: #252536;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            margin-top: 6px;
+            overflow: hidden;
         }
 
         .modern-admin-menu #wpadminbar .ab-submenu {
             background: transparent;
-            padding: 4px 0;
+            padding: 6px 0;
         }
 
         .modern-admin-menu #wpadminbar .ab-submenu .ab-item {
             color: rgba(255,255,255,0.85) !important;
+            padding: 8px 14px !important;
             transition: all 0.15s ease;
         }
 
@@ -278,7 +260,7 @@ class Modern_Admin_Menu {
             color: white !important;
         }
 
-        /* User Account Menu */
+        /* User Avatar */
         .modern-admin-menu #wpadminbar #wp-admin-bar-my-account img.avatar {
             border: 2px solid rgba(255,255,255,0.2);
             border-radius: 50%;
@@ -288,7 +270,7 @@ class Modern_Admin_Menu {
         .modern-admin-menu #wpadminbar .ab-item .ab-label,
         .modern-admin-menu #wpadminbar #wp-admin-bar-updates .ab-label {
             background: #e74c3c !important;
-            border-radius: 9px;
+            border-radius: 8px;
             font-size: 9px;
             padding: 2px 5px;
         }
@@ -298,28 +280,26 @@ class Modern_Admin_Menu {
             color: rgba(255,255,255,0.9);
         }
 
-        /* New Content Button - subtle highlight */
+        /* New Content Button */
         .modern-admin-menu #wpadminbar #wp-admin-bar-new-content:hover > a {
             background: rgba(34, 113, 177, 0.4) !important;
         }
 
         /* =====================================================
-           PLUGIN-SPECIFIC FIXES
+           PLUGIN ICON FIXES
            ===================================================== */
 
-        /* Fix for plugins with custom SVG icons */
         .modern-admin-menu #adminmenu .wp-menu-image.svg {
             background-size: 20px 20px;
             background-position: center;
         }
 
-        /* Site Icon in Toolbar */
         .modern-admin-menu #wpadminbar .blavatar {
             border-radius: 3px;
         }
 
         /* =====================================================
-           RESPONSIVE ADJUSTMENTS
+           RESPONSIVE
            ===================================================== */
 
         @media screen and (max-width: 782px) {
