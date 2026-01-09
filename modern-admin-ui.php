@@ -140,12 +140,96 @@ class Modern_Admin_UI_Plugin {
         if ('toplevel_page_modern-admin-ui' !== $hook) {
             return;
         }
-        
+
         // Add inline styles for our settings page
         wp_add_inline_style('wp-admin', $this->get_settings_page_styles());
-        
-        // Add inline script for toggle interactions
-        wp_add_inline_script('jquery', $this->get_settings_page_scripts());
+
+        // Add script to footer
+        add_action('admin_footer', array($this, 'output_settings_scripts'));
+    }
+
+    /**
+     * Output settings page scripts in footer
+     */
+    public function output_settings_scripts() {
+        ?>
+        <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            // Tab switching
+            $('.modern-settings-tab').on('click', function() {
+                var tab = $(this).data('tab');
+                $('.modern-settings-tab').removeClass('active');
+                $(this).addClass('active');
+                $('.modern-settings-panel').removeClass('active');
+                $('.modern-settings-panel[data-tab="' + tab + '"]').addClass('active');
+            });
+
+            // Update toggle label text on change
+            function updateToggleLabel($checkbox) {
+                var $label = $checkbox.closest('.modern-toggle-wrapper').find('.modern-toggle-label');
+                $label.text($checkbox.is(':checked') ? 'Enabled' : 'Disabled');
+            }
+
+            // Update counter badge
+            function updateCounter() {
+                var count = $('.modern-settings-list .modern-toggle-checkbox:checked').length;
+                var total = $('.modern-settings-list .modern-toggle-checkbox').length;
+                $('.modern-counter').text(count + '/' + total);
+            }
+
+            // Update master toggle state based on individual toggles
+            function updateMasterToggle() {
+                var allChecked = true;
+                var anyChecked = false;
+                $('.modern-settings-list .modern-toggle-checkbox').each(function() {
+                    if ($(this).is(':checked')) {
+                        anyChecked = true;
+                    } else {
+                        allChecked = false;
+                    }
+                });
+
+                var $master = $('#enable_all_settings');
+                var $label = $master.closest('.modern-toggle-wrapper').find('.modern-toggle-label');
+
+                if (allChecked) {
+                    $master.prop('checked', true);
+                    $label.text('All Enabled');
+                } else if (anyChecked) {
+                    $master.prop('checked', false);
+                    $label.text('Some Enabled');
+                } else {
+                    $master.prop('checked', false);
+                    $label.text('Disabled');
+                }
+            }
+
+            // Master toggle - enable/disable all
+            $('#enable_all_settings').on('click', function() {
+                var isChecked = $(this).is(':checked');
+                $('.modern-settings-list .modern-toggle-checkbox').each(function() {
+                    $(this).prop('checked', isChecked);
+                    updateToggleLabel($(this));
+                });
+                updateCounter();
+
+                var $label = $(this).closest('.modern-toggle-wrapper').find('.modern-toggle-label');
+                $label.text(isChecked ? 'All Enabled' : 'Disabled');
+            });
+
+            // Individual toggle changes
+            $('.modern-settings-list .modern-toggle-checkbox').on('change', function() {
+                updateToggleLabel($(this));
+                updateCounter();
+                updateMasterToggle();
+            });
+
+            // Initialize
+            updateCounter();
+            updateMasterToggle();
+        });
+        </script>
+        <?php
     }
     
     /**
@@ -441,77 +525,6 @@ class Modern_Admin_UI_Plugin {
         }
         ";
     }
-    
-    /**
-     * Get settings page scripts
-     */
-    private function get_settings_page_scripts() {
-        return "
-        jQuery(document).ready(function($) {
-            // Tab switching
-            $('.modern-settings-tab').on('click', function() {
-                var tab = $(this).data('tab');
-                $('.modern-settings-tab').removeClass('active');
-                $(this).addClass('active');
-                $('.modern-settings-panel').removeClass('active');
-                $('.modern-settings-panel[data-tab=\"' + tab + '\"]').addClass('active');
-            });
-
-            // Update toggle label text on change
-            $('.modern-toggle-checkbox').on('change', function() {
-                var label = $(this).closest('.modern-toggle-wrapper').find('.modern-toggle-label');
-                if ($(this).is(':checked')) {
-                    label.text('Enabled');
-                } else {
-                    label.text('Disabled');
-                }
-                updateCounter();
-            });
-
-            // Master toggle - enable/disable all
-            $('#enable_all_settings').on('change', function() {
-                var isChecked = $(this).is(':checked');
-                $('.modern-settings-list .modern-toggle-checkbox').each(function() {
-                    $(this).prop('checked', isChecked).trigger('change');
-                });
-            });
-
-            // Update master toggle state based on individual toggles
-            function updateMasterToggle() {
-                var allChecked = true;
-                var anyChecked = false;
-                $('.modern-settings-list .modern-toggle-checkbox').each(function() {
-                    if ($(this).is(':checked')) {
-                        anyChecked = true;
-                    } else {
-                        allChecked = false;
-                    }
-                });
-                $('#enable_all_settings').prop('checked', allChecked);
-                var label = $('#enable_all_settings').closest('.modern-toggle-wrapper').find('.modern-toggle-label');
-                label.text(allChecked ? 'All Enabled' : (anyChecked ? 'Some Enabled' : 'Disabled'));
-            }
-
-            // Update counter badge
-            function updateCounter() {
-                var count = $('.modern-settings-list .modern-toggle-checkbox:checked').length;
-                var total = $('.modern-settings-list .modern-toggle-checkbox').length;
-                $('.modern-counter').text(count + '/' + total);
-                updateMasterToggle();
-            }
-
-            // Individual toggle change updates master
-            $('.modern-settings-list .modern-toggle-checkbox').on('change', function() {
-                updateMasterToggle();
-            });
-
-            // Initialize
-            updateCounter();
-            updateMasterToggle();
-        });
-        ";
-    }
-    
     /**
      * Render settings page
      */
