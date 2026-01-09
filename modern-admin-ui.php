@@ -44,15 +44,18 @@ class Modern_Admin_UI_Plugin {
     private function __construct() {
         // Add admin menu
         add_action('admin_menu', array($this, 'add_admin_menu'));
-        
+
         // Register settings
         add_action('admin_init', array($this, 'register_settings'));
-        
+
         // Enqueue admin styles for settings page
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
-        
+
         // Load individual page modernizers based on settings
         add_action('admin_init', array($this, 'load_page_modernizers'));
+
+        // Output custom styles on all admin pages
+        add_action('admin_head', array($this, 'output_custom_styles'));
     }
     
     /**
@@ -129,9 +132,185 @@ class Modern_Admin_UI_Plugin {
             $sanitized[$field] = isset($input[$field]) ? 1 : 0;
         }
 
+        // Style options
+        $valid_color_schemes = array('default', 'blue', 'green', 'purple', 'orange', 'dark');
+        $sanitized['color_scheme'] = isset($input['color_scheme']) && in_array($input['color_scheme'], $valid_color_schemes)
+            ? $input['color_scheme'] : 'default';
+
+        $sanitized['primary_color'] = isset($input['primary_color'])
+            ? sanitize_hex_color($input['primary_color']) : '#2271b1';
+
+        $sanitized['rounded_corners'] = isset($input['rounded_corners']) ? 1 : 0;
+        $sanitized['compact_mode'] = isset($input['compact_mode']) ? 1 : 0;
+        $sanitized['smooth_animations'] = isset($input['smooth_animations']) ? 1 : 0;
+        $sanitized['modern_buttons'] = isset($input['modern_buttons']) ? 1 : 0;
+        $sanitized['enhanced_focus'] = isset($input['enhanced_focus']) ? 1 : 0;
+
         return $sanitized;
     }
-    
+
+    /**
+     * Get default style options
+     */
+    public function get_default_styles() {
+        return array(
+            'color_scheme' => 'default',
+            'primary_color' => '#2271b1',
+            'rounded_corners' => 1,
+            'compact_mode' => 0,
+            'smooth_animations' => 1,
+            'modern_buttons' => 1,
+            'enhanced_focus' => 1
+        );
+    }
+
+    /**
+     * Output custom styles on admin pages
+     */
+    public function output_custom_styles() {
+        $options = get_option('modern_admin_ui_settings', array());
+        $defaults = $this->get_default_styles();
+
+        // Merge with defaults
+        $styles = wp_parse_args($options, $defaults);
+
+        // Color scheme presets
+        $color_schemes = array(
+            'default' => array('primary' => '#2271b1', 'accent' => '#135e96'),
+            'blue' => array('primary' => '#0073aa', 'accent' => '#005177'),
+            'green' => array('primary' => '#00a32a', 'accent' => '#007017'),
+            'purple' => array('primary' => '#7c3aed', 'accent' => '#5b21b6'),
+            'orange' => array('primary' => '#d97706', 'accent' => '#b45309'),
+            'dark' => array('primary' => '#1e293b', 'accent' => '#334155')
+        );
+
+        $scheme = isset($color_schemes[$styles['color_scheme']]) ? $color_schemes[$styles['color_scheme']] : $color_schemes['default'];
+        $primary_color = !empty($styles['primary_color']) && $styles['color_scheme'] === 'default' ? $styles['primary_color'] : $scheme['primary'];
+
+        // Calculate accent color (darker version)
+        $accent_color = $this->adjust_color_brightness($primary_color, -20);
+
+        ?>
+        <style type="text/css" id="modern-admin-ui-custom-styles">
+        :root {
+            --maui-primary: <?php echo esc_attr($primary_color); ?>;
+            --maui-accent: <?php echo esc_attr($accent_color); ?>;
+            --maui-radius: <?php echo $styles['rounded_corners'] ? '8px' : '2px'; ?>;
+            --maui-radius-sm: <?php echo $styles['rounded_corners'] ? '4px' : '1px'; ?>;
+        }
+
+        <?php if ($styles['smooth_animations']) : ?>
+        /* Smooth animations */
+        .modern-settings-wrapper,
+        .modern-tab-content,
+        .modern-settings-panel,
+        .modern-toggle-slider,
+        .modern-toggle-slider:before,
+        .button,
+        input,
+        select,
+        textarea {
+            transition: all 0.2s ease !important;
+        }
+        <?php endif; ?>
+
+        <?php if ($styles['modern_buttons']) : ?>
+        /* Modern buttons */
+        .modern-settings-wrapper .button-primary,
+        .modern-tab-content .button-primary {
+            background: var(--maui-primary) !important;
+            border-color: var(--maui-primary) !important;
+            border-radius: var(--maui-radius-sm) !important;
+            text-shadow: none !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+        }
+
+        .modern-settings-wrapper .button-primary:hover,
+        .modern-tab-content .button-primary:hover {
+            background: var(--maui-accent) !important;
+            border-color: var(--maui-accent) !important;
+        }
+
+        .modern-settings-wrapper .button,
+        .modern-tab-content .button {
+            border-radius: var(--maui-radius-sm) !important;
+        }
+        <?php endif; ?>
+
+        <?php if ($styles['enhanced_focus']) : ?>
+        /* Enhanced focus states */
+        .modern-settings-wrapper input:focus,
+        .modern-settings-wrapper select:focus,
+        .modern-settings-wrapper textarea:focus,
+        .modern-tab-content input:focus,
+        .modern-tab-content select:focus,
+        .modern-tab-content textarea:focus {
+            border-color: var(--maui-primary) !important;
+            box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.2) !important;
+            outline: none !important;
+        }
+        <?php endif; ?>
+
+        <?php if ($styles['compact_mode']) : ?>
+        /* Compact mode */
+        .modern-settings-wrapper {
+            padding: 16px !important;
+        }
+        .modern-tab-content {
+            padding: 20px !important;
+        }
+        .modern-form-section {
+            margin-bottom: 20px !important;
+        }
+        .modern-tab-content .form-table td {
+            padding: 0 0 16px 0 !important;
+        }
+        <?php endif; ?>
+
+        /* Apply primary color to UI elements */
+        .modern-settings-wrapper .modern-tab-button.active,
+        .modern-tab-content .modern-tab-button.active {
+            border-bottom-color: var(--maui-primary) !important;
+            color: var(--maui-primary) !important;
+        }
+
+        .modern-toggle-checkbox:checked + .modern-toggle-slider {
+            background-color: var(--maui-primary) !important;
+        }
+
+        .modern-settings-wrapper,
+        .modern-tab-content {
+            border-radius: var(--maui-radius) !important;
+        }
+
+        .modern-info-box {
+            border-left-color: var(--maui-primary) !important;
+        }
+        </style>
+        <?php
+    }
+
+    /**
+     * Adjust color brightness
+     */
+    private function adjust_color_brightness($hex, $percent) {
+        $hex = ltrim($hex, '#');
+
+        if (strlen($hex) === 3) {
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+        }
+
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        $r = max(0, min(255, $r + ($r * $percent / 100)));
+        $g = max(0, min(255, $g + ($g * $percent / 100)));
+        $b = max(0, min(255, $b + ($b * $percent / 100)));
+
+        return sprintf('#%02x%02x%02x', $r, $g, $b);
+    }
+
     /**
      * Enqueue admin assets
      */
@@ -227,6 +406,30 @@ class Modern_Admin_UI_Plugin {
             // Initialize
             updateCounter();
             updateMasterToggle();
+
+            // Color scheme selection
+            $('.color-scheme-radio').on('change', function() {
+                $('.color-scheme-option').removeClass('selected');
+                $(this).closest('.color-scheme-option').addClass('selected');
+            });
+
+            // Sync color picker with hex input
+            $('#primary_color').on('input', function() {
+                $('#primary_color_hex').val($(this).val());
+            });
+
+            $('#primary_color_hex').on('input', function() {
+                var hex = $(this).val();
+                if (/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hex)) {
+                    $('#primary_color').val(hex);
+                }
+            });
+
+            // Update toggle labels in style options
+            $('.modern-style-options .modern-toggle-checkbox').on('change', function() {
+                var $label = $(this).closest('.modern-toggle-wrapper').find('.modern-toggle-label');
+                $label.text($(this).is(':checked') ? 'Enabled' : 'Disabled');
+            });
         });
         </script>
         <?php
@@ -523,6 +726,171 @@ class Modern_Admin_UI_Plugin {
             border-radius: 10px;
             margin-left: 8px;
         }
+
+        /* Style Options Section */
+        .modern-style-section {
+            margin-bottom: 32px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .modern-style-section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .modern-style-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1d2327;
+            margin: 0 0 8px 0;
+        }
+
+        .modern-style-section .section-description {
+            color: #646970;
+            font-size: 13px;
+            margin: 0 0 20px 0;
+        }
+
+        /* Color Scheme Options */
+        .modern-color-schemes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .color-scheme-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .color-scheme-option:hover {
+            border-color: #2271b1;
+            background: #f8fbfd;
+        }
+
+        .color-scheme-option.selected {
+            border-color: #2271b1;
+            background: #f0f6fc;
+        }
+
+        .color-scheme-radio {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .color-swatch {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .color-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #1d2327;
+            text-align: center;
+        }
+
+        /* Custom Color Picker */
+        .custom-color-picker {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .custom-color-picker label {
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .custom-color-picker .color-hint {
+            display: block;
+            font-size: 12px;
+            color: #646970;
+            font-weight: normal;
+            margin-top: 4px;
+        }
+
+        .color-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .color-picker-input {
+            width: 60px;
+            height: 40px;
+            padding: 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            background: none;
+        }
+
+        .color-picker-input::-webkit-color-swatch-wrapper {
+            padding: 2px;
+        }
+
+        .color-picker-input::-webkit-color-swatch {
+            border: none;
+            border-radius: 4px;
+        }
+
+        .color-hex-input {
+            width: 100px;
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        /* Style Options List */
+        .modern-style-options {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .style-option-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f1;
+        }
+
+        .style-option-item:last-child {
+            border-bottom: none;
+        }
+
+        .style-option-info h4 {
+            margin: 0 0 4px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1d2327;
+        }
+
+        .style-option-info p {
+            margin: 0;
+            font-size: 13px;
+            color: #646970;
+        }
         ";
     }
     /**
@@ -624,11 +992,174 @@ class Modern_Admin_UI_Plugin {
                         </div>
                     </div>
 
-                    <!-- Tab 2: Style Options (placeholder for future) -->
+                    <!-- Tab 2: Style Options -->
                     <div class="modern-settings-panel" data-tab="styles">
-                        <div class="modern-info-box" style="margin-top:0;">
-                            <h3>Coming Soon</h3>
-                            <p>Style customization options will be available in a future update. You'll be able to customize colors, fonts, and other visual elements.</p>
+                        <?php
+                        $style_defaults = $this->get_default_styles();
+                        $color_scheme = isset($options['color_scheme']) ? $options['color_scheme'] : $style_defaults['color_scheme'];
+                        $primary_color = isset($options['primary_color']) ? $options['primary_color'] : $style_defaults['primary_color'];
+                        $rounded_corners = isset($options['rounded_corners']) ? $options['rounded_corners'] : $style_defaults['rounded_corners'];
+                        $compact_mode = isset($options['compact_mode']) ? $options['compact_mode'] : $style_defaults['compact_mode'];
+                        $smooth_animations = isset($options['smooth_animations']) ? $options['smooth_animations'] : $style_defaults['smooth_animations'];
+                        $modern_buttons = isset($options['modern_buttons']) ? $options['modern_buttons'] : $style_defaults['modern_buttons'];
+                        $enhanced_focus = isset($options['enhanced_focus']) ? $options['enhanced_focus'] : $style_defaults['enhanced_focus'];
+                        ?>
+
+                        <!-- Color Scheme Section -->
+                        <div class="modern-style-section">
+                            <h3>Color Scheme</h3>
+                            <p class="section-description">Choose a preset color scheme or customize your own primary color.</p>
+
+                            <div class="modern-color-schemes">
+                                <?php
+                                $schemes = array(
+                                    'default' => array('name' => 'Default', 'color' => '#2271b1'),
+                                    'blue' => array('name' => 'Ocean Blue', 'color' => '#0073aa'),
+                                    'green' => array('name' => 'Forest Green', 'color' => '#00a32a'),
+                                    'purple' => array('name' => 'Royal Purple', 'color' => '#7c3aed'),
+                                    'orange' => array('name' => 'Sunset Orange', 'color' => '#d97706'),
+                                    'dark' => array('name' => 'Dark Mode', 'color' => '#1e293b')
+                                );
+                                foreach ($schemes as $key => $scheme) :
+                                ?>
+                                <label class="color-scheme-option <?php echo $color_scheme === $key ? 'selected' : ''; ?>">
+                                    <input type="radio"
+                                           name="modern_admin_ui_settings[color_scheme]"
+                                           value="<?php echo esc_attr($key); ?>"
+                                           <?php checked($color_scheme, $key); ?>
+                                           class="color-scheme-radio">
+                                    <span class="color-swatch" style="background-color: <?php echo esc_attr($scheme['color']); ?>;"></span>
+                                    <span class="color-name"><?php echo esc_html($scheme['name']); ?></span>
+                                </label>
+                                <?php endforeach; ?>
+                            </div>
+
+                            <div class="custom-color-picker" id="custom-color-section">
+                                <label for="primary_color">
+                                    <strong>Custom Primary Color</strong>
+                                    <span class="color-hint">(Only applies when "Default" scheme is selected)</span>
+                                </label>
+                                <div class="color-input-wrapper">
+                                    <input type="color"
+                                           id="primary_color"
+                                           name="modern_admin_ui_settings[primary_color]"
+                                           value="<?php echo esc_attr($primary_color); ?>"
+                                           class="color-picker-input">
+                                    <input type="text"
+                                           id="primary_color_hex"
+                                           value="<?php echo esc_attr($primary_color); ?>"
+                                           class="color-hex-input"
+                                           pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+                                           placeholder="#2271b1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- UI Options Section -->
+                        <div class="modern-style-section">
+                            <h3>UI Options</h3>
+                            <p class="section-description">Customize the appearance and behavior of the modern interface.</p>
+
+                            <div class="modern-style-options">
+                                <div class="style-option-item">
+                                    <div class="style-option-info">
+                                        <h4>Rounded Corners</h4>
+                                        <p>Apply rounded corners to cards, buttons, and form elements</p>
+                                    </div>
+                                    <div class="modern-toggle-wrapper">
+                                        <label class="modern-toggle">
+                                            <input type="checkbox"
+                                                   name="modern_admin_ui_settings[rounded_corners]"
+                                                   value="1"
+                                                   <?php checked(1, $rounded_corners); ?>
+                                                   class="modern-toggle-checkbox">
+                                            <span class="modern-toggle-slider"></span>
+                                        </label>
+                                        <span class="modern-toggle-label"><?php echo $rounded_corners ? 'Enabled' : 'Disabled'; ?></span>
+                                    </div>
+                                </div>
+
+                                <div class="style-option-item">
+                                    <div class="style-option-info">
+                                        <h4>Compact Mode</h4>
+                                        <p>Reduce padding and spacing for a more compact view</p>
+                                    </div>
+                                    <div class="modern-toggle-wrapper">
+                                        <label class="modern-toggle">
+                                            <input type="checkbox"
+                                                   name="modern_admin_ui_settings[compact_mode]"
+                                                   value="1"
+                                                   <?php checked(1, $compact_mode); ?>
+                                                   class="modern-toggle-checkbox">
+                                            <span class="modern-toggle-slider"></span>
+                                        </label>
+                                        <span class="modern-toggle-label"><?php echo $compact_mode ? 'Enabled' : 'Disabled'; ?></span>
+                                    </div>
+                                </div>
+
+                                <div class="style-option-item">
+                                    <div class="style-option-info">
+                                        <h4>Smooth Animations</h4>
+                                        <p>Enable smooth transitions and animations throughout the UI</p>
+                                    </div>
+                                    <div class="modern-toggle-wrapper">
+                                        <label class="modern-toggle">
+                                            <input type="checkbox"
+                                                   name="modern_admin_ui_settings[smooth_animations]"
+                                                   value="1"
+                                                   <?php checked(1, $smooth_animations); ?>
+                                                   class="modern-toggle-checkbox">
+                                            <span class="modern-toggle-slider"></span>
+                                        </label>
+                                        <span class="modern-toggle-label"><?php echo $smooth_animations ? 'Enabled' : 'Disabled'; ?></span>
+                                    </div>
+                                </div>
+
+                                <div class="style-option-item">
+                                    <div class="style-option-info">
+                                        <h4>Modern Buttons</h4>
+                                        <p>Apply modern styling to buttons with your chosen color scheme</p>
+                                    </div>
+                                    <div class="modern-toggle-wrapper">
+                                        <label class="modern-toggle">
+                                            <input type="checkbox"
+                                                   name="modern_admin_ui_settings[modern_buttons]"
+                                                   value="1"
+                                                   <?php checked(1, $modern_buttons); ?>
+                                                   class="modern-toggle-checkbox">
+                                            <span class="modern-toggle-slider"></span>
+                                        </label>
+                                        <span class="modern-toggle-label"><?php echo $modern_buttons ? 'Enabled' : 'Disabled'; ?></span>
+                                    </div>
+                                </div>
+
+                                <div class="style-option-item">
+                                    <div class="style-option-info">
+                                        <h4>Enhanced Focus States</h4>
+                                        <p>Improve visibility of focused form elements for better accessibility</p>
+                                    </div>
+                                    <div class="modern-toggle-wrapper">
+                                        <label class="modern-toggle">
+                                            <input type="checkbox"
+                                                   name="modern_admin_ui_settings[enhanced_focus]"
+                                                   value="1"
+                                                   <?php checked(1, $enhanced_focus); ?>
+                                                   class="modern-toggle-checkbox">
+                                            <span class="modern-toggle-slider"></span>
+                                        </label>
+                                        <span class="modern-toggle-label"><?php echo $enhanced_focus ? 'Enabled' : 'Disabled'; ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modern-info-box">
+                            <h3>Live Preview</h3>
+                            <p>Changes will apply to all modernized admin pages after saving. The styles affect buttons, form elements, tabs, and info boxes throughout the WordPress admin.</p>
+                        </div>
+
+                        <div class="modern-form-actions">
+                            <?php submit_button('Save Style Settings', 'primary', 'submit', false); ?>
                         </div>
                     </div>
 
