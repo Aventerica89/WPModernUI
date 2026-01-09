@@ -121,6 +121,10 @@ class Modern_Admin_UI_Plugin {
             'enable_profile_page' => array(
                 'title' => 'Users → Profile',
                 'description' => 'Transform the user profile page with organized tabs for personal options, contact info, and account settings'
+            ),
+            'enable_admin_menu' => array(
+                'title' => 'Admin Menu & Toolbar',
+                'description' => 'Modernize the sidebar navigation menu and top admin toolbar with enhanced styling'
             )
         );
     }
@@ -1250,6 +1254,12 @@ class Modern_Admin_UI_Plugin {
         if (isset($options['enable_profile_page']) && $options['enable_profile_page']) {
             require_once MODERN_ADMIN_UI_PATH . 'includes/class-profile-settings.php';
             new Modern_Profile_Settings();
+        }
+
+        // Load Admin Menu modernizer if enabled
+        if (isset($options['enable_admin_menu']) && $options['enable_admin_menu']) {
+            require_once MODERN_ADMIN_UI_PATH . 'includes/class-admin-menu.php';
+            new Modern_Admin_Menu();
         }
     }
 }
